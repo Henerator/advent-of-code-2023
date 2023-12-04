@@ -45,4 +45,15 @@ const config = {
   blue: 14,
 };
 
-console.log(getPossibleGamesSum(input, config));
+// console.log(getPossibleGamesSum(input, config));
+
+// Part 2
+
+function getGamesPowers(lines) {
+  return lines.reduce((sum, line) => {
+    const maxs = getLineMaximus(line);
+    return sum + maxs.red * maxs.green * maxs.blue;
+  }, 0);
+}
+
+console.log(getGamesPowers(input));
