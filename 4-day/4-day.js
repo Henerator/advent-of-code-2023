@@ -25,12 +25,13 @@ function parseLine(line) {
   };
 }
 
-function getLinePoints(line) {
+function getLineMatches(line) {
   const lineData = parseLine(line);
-  const matchesCount = lineData.numbers.reduce(
-    (matches, number) => (lineData.winNumbersSet.has(number) ? matches + 1 : matches),
-    0
-  );
+  return lineData.numbers.reduce((matches, number) => (lineData.winNumbersSet.has(number) ? matches + 1 : matches), 0);
+}
+
+function getLinePoints(line) {
+  const matchesCount = getLineMatches(line);
   return matchesCount === 0 ? 0 : Math.pow(2, matchesCount - 1);
 }
 
@@ -38,4 +39,21 @@ function getLinesPoints(lines) {
   return lines.reduce((points, line) => points + getLinePoints(line), 0);
 }
 
-console.log(getLinesPoints(input));
+// console.log(getLinesPoints(input));
+
+// Part 2
+
+function getCardsCount(lines) {
+  const linesPoints = lines.map((line) => getLineMatches(line));
+  const cardsCounts = new Array(lines.length).fill(1);
+  let index = 0;
+  while (index < lines.length - 1) {
+    for (let indexShift = 1; indexShift <= linesPoints[index]; indexShift++) {
+      cardsCounts[index + indexShift] += cardsCounts[index];
+    }
+    index++;
+  }
+  return cardsCounts.reduce((sum, count) => sum + count, 0);
+}
+
+console.log(getCardsCount(input));
